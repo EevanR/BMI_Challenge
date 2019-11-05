@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>BMI Calculator</title>
+    <script src="js/person.js"></script>
+    <script src="js/bmi_calculator.js"></script>
+</head>
+
+<center><body>
+
+    <video autoplay muted loop
+    style=
+    "position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0.8;">
+        <source 
+          src="https://player.vimeo.com/external/353235717.sd.mp4?s=9972e87edcaf302ed01172b426cbee541ade97c8&profile_id=139&oauth2_token_id=57447761"
+          type="video/mp4">
+    </video>
+
+    <div style="position: fixed; left: 0; top: 0; background: rgba(0, 0, 0, 0.5); width: 100%; padding: 20px;">
+        <h1 style=
+        "color:rgb(255, 254, 254);
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
+        The World's Greatest BMI Calculator</h1>
+    </div>
+
+    <div style="position: fixed; left: 0; top: 25%; background: rgba(117, 113, 113, 0.5); width: 100%; padding: 30px;">
+        <h2 style=
+        "color:rgb(56, 54, 54);
+        line-height: 1.5;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
+        Metric Calculator</h2>
+
+        <form id="calculate">
+            <div id="metric-inputs">
+                <input type="text" id="weight-in-kgs" placeholder="Weight Kgs">
+                <input type="text" id="height-in-cm" placeholder="Height cm">
+            </div>
+
+            <button type="submit" value="Calculate"> Calculate Metric</button>
+        </form>
+        <div>
+            <h3>
+                <span id="display_value"></span>
+                <span id="display_message"></span>
+            </h3>
+        </div>
+    </div>
+
+    <script type="text/javascript">   
+
+        const global = {}
+
+        global.calculateForm = document.querySelector('#calculate');
+        global.displayValueElement = document.querySelector('#display_value');
+        global.displayMessageElement = document.querySelector('#display_message');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            global.calculateForm.addEventListener('submit', event => {
+                event.preventDefault();
+                calculateBMI()
+                    .then(person => {
+                        global.displayValueElement.innerHTML = `Your BMI is ${person.bmiValue}`;
+                        global.displayMessageElement.innerHTML = `and you are ${person.bmiMessage}`;
+                    })
+            })
+        });
+
+        const calculateBMI = () => {
+            return new Promise(resolve => {
+                let w = parseFloat(document.getElementById('weight-in-kgs').value);
+                let h = parseFloat(document.getElementById('height-in-cm').value);
+                let person = new Person({
+                    weight: w,
+                    height: h,
+                });
+                person.calculate_bmi();
+                resolve(person);
+            })
+        };
+        
+    </script>
+
+    <script type="text/javascript">              
+        function computeImperialBMI() {
+            const heightFeet = Number(document.getElementById("heightfeet").value);
+            const heightInch = Number(document.getElementById("heightinch").value);
+            const weightLbs = Number(document.getElementById("weightlbs").value);
+
+            let finalHeight = (heightFeet * 12) + heightInch;
+            let imperialBMI = (weightLbs * 703) / Math.pow(finalHeight, 2);
+
+            document.getElementById("output").innerHTML = Math.round(imperialBMI * 100)/100;
+            if (imperialBMI < 18.5) document.getElementById("comment").innerHTML = "Underweight, Congradulations.";
+            if (imperialBMI >= 18.5 && imperialBMI <= 24.9) document.getElementById("comment").innerHTML = "Normal, Congradulations.";
+            if (imperialBMI >= 25 && imperialBMI <= 29.9) document.getElementById("comment").innerHTML = "Overweight, Congradulations.";
+            if (imperialBMI > 30) document.getElementById("comment").innerHTML = "Obese, Congradulations.";            
+        }
+    
+    </script>
+    
+    <div style="position: fixed; left: 0; top: 60%; background: rgba(117, 113, 113, 0.5); width: 100%; padding: 10px;">
+        <h2 style=
+        "color:rgb(56, 54, 54);
+        line-height: 1;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">
+        Imperial Calculator</h2>
+        
+        <p style=
+        "color: rgb(121, 7, 7);
+        font-weight: 900;">Enter height:
+            <input type = "text" id = "heightfeet" placeholder = "Feet"/>
+            <input type = "text" id = "heightinch" placeholder = "Inches"/>
+        </p>
+        <p style=
+        "color: rgb(121, 7, 7);
+        font-weight: 900;">Enter weight:
+            <input type = "text" id = "weightlbs" placeholder = "Pounds"/>
+        </p>
+        <input type="button" value="Calculate Imperial" onclick="computeImperialBMI()"/>
+
+        <h3 style=
+        "color:rgb(56, 54, 54);
+        line-height: 1;
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-size: 20px;">Your BMI is: <span id="output"> ?</span></h3>
+        
+        <h3 style=
+        "color:rgb(56, 54, 54);
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-size: 20px;">According to our calculations you are: <span id="comment"> Please input measurements</span> </h3>
+    </div>
+
+</body></center>
+
+</html>
